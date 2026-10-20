@@ -25,4 +25,4 @@ VITE_APPS_SCRIPT_URL=https://script.google.com/macros/s/你的部署識別碼/ex
 
 ## 部署狀態
 
-網站尚未部署到 GitHub Pages。部署完成後，請將實際 Pages 網址補在此處。
+網站已部署到 GitHub Pages：[正式網站](https://heidilee2324.github.io/sdg4-becoming-a-teacher/)。
