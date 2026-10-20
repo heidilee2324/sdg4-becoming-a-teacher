@@ -1,4 +1,4 @@
-const SPREADSHEET_ID = 'REPLACE_WITH_GOOGLE_SHEET_ID';
+const SPREADSHEET_ID_PROPERTY = 'SPREADSHEET_ID';
 const SHEET_NAME = '觀展回饋';
 const HEADERS = ['送出時間', '理解程度（1–3）', '觀察線索', '觀展短句'];
 const ALLOWED_LENSES = [
@@ -59,11 +59,11 @@ function saveFeedback(payload) {
 }
 
 function getFeedbackSheet_() {
-  if (!SPREADSHEET_ID || SPREADSHEET_ID === 'REPLACE_WITH_GOOGLE_SHEET_ID') {
-    throw new Error('請先在 Code.gs 設定試算表 ID。');
-  }
+  const spreadsheetId = PropertiesService.getScriptProperties()
+    .getProperty(SPREADSHEET_ID_PROPERTY);
+  if (!spreadsheetId) throw new Error('請先在 Apps Script 專案設定加入 SPREADSHEET_ID。');
 
-  const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const spreadsheet = SpreadsheetApp.openById(spreadsheetId);
   return spreadsheet.getSheetByName(SHEET_NAME) || spreadsheet.insertSheet(SHEET_NAME);
 }
 
