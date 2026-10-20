@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+  <head>
+    <base target="_top" />
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <script>
+      const CHANNEL = 'sdg4-teacher-exhibition-feedback';
+      let trustedParentOrigin = '*';
+
+      try {
+        if (document.referrer) trustedParentOrigin = new URL(document.referrer).origin;
+      } catch (error) {
+        trustedParentOrigin = '*';
+      }
+
+      function notifyParent(message) {
+        window.parent.postMessage({ channel: CHANNEL, ...message }, trustedParentOrigin);
+      }
+
+      window.addEventListener('message', (event) => {
+        if (event.source !== window.parent) return;
+        if (trustedParentOrigin !== '*' && event.origin !== trustedParentOrigin) return;
+        if (event.data?.channel !== CHANNEL || event.data.type !== 'submit') return;
+
+        google.script.run
+          .withSuccessHandler((result) => {
+            if (result && result.ok === true) {
+              notifyParent({ type: 'success', ok: true });
+            } else {
+              notifyParent({ type: 'failure' });
+            }
+          })
+          .withFailureHandler(() => notifyParent({ type: 'failure' }))
+          .saveFeedback(event.data.payload);
+      });
+
+      notifyParent({ type: 'ready' });
+    </script>
+  </body>
+</html>
